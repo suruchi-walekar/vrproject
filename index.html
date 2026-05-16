@@ -1,455 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VR Piano Keyboard</title>
+  <title>Suruchi Walekar</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700&family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Syne:wght@400;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f0f0f;
-      --surface: #1a1a1a;
-      --ink: #f0f0f0;
-      --ink-soft: #f0f0f0;
+      --bg: #0a0a0a;
+      --ink: #efefef;
+      --ink-dim: #666;
       --accent: #5b8dd9;
-      --border: #2e2e2e;
-      --tab-h: 52px;
+      --rule: #222;
     }
 
     body {
-      font-family: 'DM Sans', sans-serif;
       background: var(--bg);
       color: var(--ink);
+      font-family: 'Cormorant Garamond', serif;
       min-height: 100vh;
-      font-size: 16px;
-      line-height: 1.7;
-    }
-
-    /* ── Header ── */
-    header {
-      padding: 3.5rem 2rem 1.5rem;
-      max-width: 800px;
-      margin: 0 auto;
-      border-bottom: 1px solid var(--border);
-    }
-
-    header .label {
-      font-family: 'Syne', sans-serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.6rem;
-    }
-
-    header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      line-height: 1.15;
-      font-weight: 400;
-      color: var(--ink);
-    }
-
-    header .meta {
-      margin-top: 0.75rem;
-      font-size: 0.88rem;
-      color: var(--ink-soft);
-      font-weight: 300;
-    }
-
-    /* ── Tabs ── */
-    .tabs-wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .tabs {
       display: flex;
-      gap: 0;
-      margin-top: 2rem;
-      border-bottom: 2px solid var(--border);
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
 
-    .tab-btn {
+    main {
+      width: 100%;
+      max-width: 520px;
+      opacity: 0;
+      animation: fadein 0.9s ease forwards;
+    }
+
+    @keyframes fadein {
+      to { opacity: 1; }
+    }
+
+    .name {
+      font-size: clamp(2.4rem, 8vw, 3.8rem);
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      line-height: 1.1;
+      margin-bottom: 0.35rem;
+    }
+
+    .tagline {
       font-family: 'Syne', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      padding: 0.75rem 1.4rem;
+      color: var(--ink-dim);
+      margin-bottom: 3rem;
+    }
+
+    hr {
       border: none;
-      background: transparent;
-      color: var(--ink-soft);
-      cursor: pointer;
-      position: relative;
+      border-top: 1px solid var(--rule);
+      margin-bottom: 2rem;
+    }
+
+    .projects {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--rule);
+      text-decoration: none;
+      color: inherit;
       transition: color 0.2s;
     }
 
-    .tab-btn::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0; right: 0;
-      height: 2px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transition: transform 0.2s;
+    .project:first-child {
+      border-top: 1px solid var(--rule);
     }
 
-    .tab-btn.active {
-      color: var(--ink);
+    .project:hover { color: var(--accent); }
+    .project:hover .arrow { transform: translateX(4px); color: var(--accent); }
+
+    .project-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
     }
 
-    .tab-btn.active::after {
-      transform: scaleX(1);
-    }
-
-    /* ── Content panels ── */
-    .tab-panel {
-      display: none;
-      padding: 2.5rem 0 5rem;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    /* ── Text sections ── */
-    .section {
-      margin-bottom: 2.8rem;
-    }
-
-    .section h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.35rem;
+    .project-title {
+      font-size: 1.25rem;
       font-weight: 400;
-      margin-bottom: 0.6rem;
-      color: var(--ink);
     }
 
-    .section h2 span {
-      display: inline-block;
+    .project-desc {
       font-family: 'Syne', sans-serif;
       font-size: 0.68rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--accent);
-      vertical-align: middle;
-      margin-right: 0.6rem;
-      font-weight: 700;
+      color: var(--ink-dim);
     }
 
-    .section p {
-      color: var(--ink-soft);
-      font-weight: 300;
-      max-width: 65ch;
+    .arrow {
+      font-size: 1.1rem;
+      color: var(--ink-dim);
+      transition: transform 0.2s, color 0.2s;
+      flex-shrink: 0;
+      margin-left: 1rem;
     }
-
-    .section p + p {
-      margin-top: 0.9rem;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: underline;
-    }
-
-    /* placeholder text hint */
-    .placeholder-hint {
-      color: #f0f0f0;
-      font-size: 0.9rem;
-    }
-
-    .section ul, .section ol {
-      padding-left: 1.4rem;
-      color: var(--ink-soft);
-      font-weight: 300;
-      max-width: 65ch;
-    }
-
-    .section li {
-      margin-bottom: 0.4rem;
-      font-size: 0.9rem;
-    }
-
-    /* divider */
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 2.2rem 0;
-    }
-
-    /* ── Video block ── */
-    .video-block {
-      margin-bottom: 2.8rem;
-    }
-
-    .video-block h2 {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.35rem;
-      font-weight: 400;
-      margin-bottom: 0.8rem;
-      color: var(--ink);
-    }
-
-    .video-wrapper {
-      width: 100%;
-      max-width: 680px;
-      border-radius: 3px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* For embedded iframes (YouTube, etc.) */
-    .video-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-
-    /* For local video files */
-    .video-wrapper video {
-      width: 100%;
-      display: block;
-    }
-
-    /* placeholder when no src yet */
-    .video-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      color: #444;
-      font-family: 'Syne', sans-serif;
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .video-placeholder svg {
-      opacity: 0.3;
-    }
-
-    .video-caption {
-      margin-top: 0.65rem;
-      font-size: 0.85rem;
-      color: var(--ink-soft);
-      font-weight: 300;
-      font-style: italic;
-      max-width: 65ch;
-    }
-
   </style>
 </head>
 <body>
+  <main>
+    <h1 class="name">Suruchi Walekar</h1>
+    <p class="tagline">programmer, i suppose</p>
+    <hr>
+    <div class="projects">
 
-  <header>
-    <p class="label">CMSC731&nbsp;</p>
-    <h1>VR Piano Keyboard</h1>
-    <p class="meta">Brian Lau, Suruchi Walekar, Jason Yih</p>
-  </header>
+      <a class="project" href="https://suruchi-walekar.github.io/dataviz/">
+        <div class="project-left">
+          <span class="project-title">Analysis of PlanetTerp Data</span>
+          <span class="project-desc">CMSC320 Final Project</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
 
-  <div class="tabs-wrapper">
-
-    <nav class="tabs">
-      <button class="tab-btn" onclick="switchTab('midterm', this)">Midterm Report</button>
-      <button class="tab-btn active" onclick="switchTab('final', this)">Final Report</button>
-    </nav>
-
-    <!-- ══════════════════════════════════════════
-         TAB 1: MIDTERM REPORT
-         ══════════════════════════════════════════ -->
-    <div id="tab-midterm" class="tab-panel">
-
-      <div class="section">
-        <h2><span>01</span> Initial Goals</h2>
-        <p class="placeholder-hint">Our initial goal was to make a functional VR piano keyboard that would be as close as possible to the physics and interactions of a real keyboard to test the limits of hand tracking. Our motivation was that a VR keyboard would allow people to test chords and learn basic songs with only a VR headset. By April 30th, we wanted to achieve a working segment of a keyboard with accurate finger tracking, key presses, interactions, and sounds. By May 15th, we want to take velocity and position into account when interacting with keys, expand to a full keyboard, improve physics, and add static sheet music.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>02</span> Current Progress</h2>
-        <p class="placeholder-hint">As of now, we are on track in terms of our goals for our MVP, with a working segment of a keyboard that allows for pressing the keys using hand tracking. Basic sound generation and Rigidbody interactions have been implemented, as well as initial velocity-based key pressing.</p>
-        <ul>
-          <li>Suruchi</li>
-          <ul>
-            <li>Set up basic hand tracking using the built in OVRSkeleton, adding a visible mesh so that the user can see their hands in virtual space, and observing the accuracy of hand tracking as-is</li>
-            <li>Added Rigidbody physics to both the piano keys and the hands for more realistic interactions, and started tracking finger velocity to measure presses</li>
-            <li>Tested changing spring force and strength of presses for greater accuracy</li>
-            <li>Fixed initial errors such as floating and unpredictable key positions</li>
-          </ul>
-          <li>Brian</li>
-          <ul>
-            <li>Added an initial keyboard segment and table with colliders for easier testing, as well as code for working keys that generate sound</li>
-            <li>Implemented volume control so keys are louder proportional to the strength of a press</li>
-            <li>Added fadeouts so that notes linger slightly when they are pressed, similar to a real piano</li>
-            <li>Improved key return and damping as well as issues with clamping so keys would return faster after being pressed and the visual representations would be more stable</li>
-          </ul>
-          <li>Jason</li>
-          <ul>
-            <li>Improved finger tracking and piano responsiveness</li>
-            <li>Implemented use of segments of fingers instead of fingertips to allow for accurate key presses</li>
-            <li>Fixed bugs such as keys playing over and over, as well as issues with no sound when keys were pressed</li>
-          </ul>
-        </ul>
-      </div>
-
-      <div class="section">
-        <h2><span>03</span> Remaining Goals</h2>
-        <p class="placeholder-hint">Our remaining goals include making the black keys functional by editing the current meshes and how they are placed, continuing to improve upon physical interactions and sound generation, adding dynamic keyboard and table positioning, expanding to a full keyboard with more accurately sized keys, and adding static sheet music. In case we encounter time constraints, sheet music can be moved to long-term goals and future work in order for us to focus on creating the most realistic physics possible for the best user experience.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>04</span> Expected Contributions</h2>
-        <p class="placeholder-hint">Our expected contributions remain largely the same as our initial project proposal. We aim to complete all or most of the remaining goals, with the order of priority being to ensure all keys are functional, improve the tracking of individual fingers, having a full keyboard, and reducing the key size as much as hand tracking will allow, to create a fully functional MVP.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>05</span> Long-Term Goals</h2>
-        <p class="placeholder-hint">If we are able to add sample sheet music and improve the general aesthetics of the app, our long-term goal is to register as developers on the Meta Store or App Lab to bring our app to more users for feedback and ideas for improvement.</p>
-      </div>
+      <a class="project" href="https://suruchi-walekar.github.io/vrproject/">
+        <div class="project-left">
+          <span class="project-title">VR Piano Keyboard</span>
+          <span class="project-desc">CMSC731 Final Project</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
 
     </div>
-
-    <!-- ══════════════════════════════════════════
-         TAB 2: FINAL REPORT
-         ══════════════════════════════════════════ -->
-    <div id="tab-final" class="tab-panel active">
-
-      <div class="section">
-        <h2><span>01</span> Background &amp; Motivation</h2>
-        <p class="placeholder-hint">For our project, we wanted to build a piano keyboard in VR in order to test the limits of hand tracking. Due to the fact that keyboards and pianos are not portable, yet beginners require frequent practice to improve, a VR keyboard would be helpful for students and even more experienced players to play on the go by allowing players to test chords and learn basic songs anywhere. While haptics would be necessary to truly simulate the feel and weight of piano keys, designing a purely virtual keyboard can demonstrate the current state of hand tracking. Currently, hand tracking has improved significantly on these headsets, and can be combined with manual filtering and logic to improve the accuracy and responsiveness of the playing.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>02</span> Current Applications</h2>
-        <p class="placeholder-hint">The current state-of-the-art includes usable piano applications in VR. However, each one has its own limitations and issues that make it difficult to reliably use to practice. For example, <a href="https://www.meta.com/experiences/pianovision/5271074762922599/">PianoVision</a> is a paid application on the Meta Quest Store that is most commonly used to connect to a real piano in a Mixed Reality environment. In virtual reality, however, it is highly inaccurate when relying on the hand tracking features of the headset. It is difficult to play chords and even place the keyboard virtually. The <a href="https://www.meta.com/experiences/piano/5845235572186417/">Piano</a> app on the Meta Quest store is another option. It is usable with decent key physics, but it is difficult to play chords. Fingers get confused between notes, causing untargeted keys to play. Lastly, <a href="https://www.meta.com/experiences/spatial-piano/31383123437999247/">Spatial Piano</a> allows users to place the keyboard in augmented reality, showing it in real life environments. However, the key physics are inaccurate and fingers phase through keys.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>03</span> Challenges</h2>
-        <p class="placeholder-hint">We aimed to tackle the challenges of the place and plausibility illusion, with our core goals being to make the user feel immersed in a scene as if they are really in a different room, and to feel as if they are actually playing a keyboard regardless of the inaccuracy of physics. Hand tracking is still a major challenge in the creation of our VR piano. The hand tracking that the Quest headsets provide is relatively accurate, but difficult to make extremely precise finger movements with. The key physics and lasting contact are also a challenge. With certain apps, the keys themselves don't look or move similarly to in real life, negatively impacting the realism and feel.</p>
-        <p class="placeholder-hint">Another challenge is occlusion. If the user's hands are crossed, the headset's cameras can lose track of their fingers since they are unable to see them. Lastly, without a physical keyboard, the player can be forced to play in the air, which can be exhausting. With a real piano, the hands are supported, but a VR piano can quickly result in fatigue.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>04</span> Proposed Techniques</h2>
-        <p class="placeholder-hint">We tried to employ specific techniques to solve the challenges as effectively as possible. For hand tracking, we combined the built-in Meta Quest hand tracking system with filters in order to make it more accurate. We used the OVRSkeleton component in Unity to interface with the raw data from the headset. This hand tracking data is noisy, so to combat this we used a low-pass filter. Using linear interpolation, we smoothed out the tracked positions, reducing jitter and making the fingertip movement appear more consistent.</p>
-        <p class="placeholder-hint">With key physics, we used a few different approaches. We used collision detection over Rigidbodies after trying both and realizing that adding Rigidbodies to the in-built hand rig capsules would cause Unity's physics system to fight itself. Using triggers allows the fingers to pass through the key's volume without any physical resistance while still playing the sound and moving the key using code. To prevent accidentally playing keys, we use a minimum downward velocity. If the user doesn't deliberately make a playing motion, their finger won't reach the required velocity and the key won't play. We also utilize a static dictionary to keep track of which fingers are playing keys. If a finger is playing a key, it is confined to that key in the dictionary, and can't play another key at the same time. This prevents accidentally hitting two notes at once while preserving logic for chords.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>05</span> Accomplishments</h2>
-        <p class="placeholder-hint">We successfully built a functional VR piano system that integrates real-time hand tracking with interactive key physics and audio feedback. Our final application allows users to play a full realistic, virtual keyboard using only their hands without the need for any controllers or external hardware. Despite the limitations of current hand tracking technology, we were able to achieve a responsive and more enjoyable playing experience than the current state-of-the-art that supports both single notes and basic chords.</p>
-        <p class="placeholder-hint">We implemented a hand tracking pipeline using the Meta Quest OVRSkeleton system in Unity enabling direct access to finger joint data and real-time skeletal reconstruction. We also applied post-processing smoothing techniques such as low-pass filtering and linear interpolation to reduce jitters and improve the stability of fingertip movement, resulting in more realistic key interactions. We also developed a functional collision system for the piano keys that detects fingertip contact and triggers accurate sound playback using RigidBodies.</p>
-        <p class="placeholder-hint">In addition, we integrated realistic audio feedback with low-latency response so that notes sound natural and immediately responsive to user input. We also implemented note fading to ensure smoother audio decay rather than abrupt cutoffs, which help mimic the sustained behavior of a real piano. On top of this, we added dynamic volume adjustment based on the velocity of key presses, allowing softer interactions to produce quieter notes and firmer presses to result in louder output, improving the overall expressiveness and realism of the instrument.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>06</span> Contributions</h2>
-        <h3 class="placeholder-hint"><b>Suruchi</b></h3>
-        <p class="placeholder-hint">Implemented hand tracking logic with capsule colliders and connected it to the keys to add the core functionality of the playing action, experimenting with both collision-based events and Rigidbody physics</p>
-        <p></p>
-        <h3 class="placeholder-hint"><b>Brian</b></h3>
-        <p class="placeholder-hint">Created an immersive environment to help the user feel as if they are in a different room to prevent a lack of presence if the keyboard appeared in the user's physical space where it could be out of place.</p>
-        <p></p>
-        <h3 class="placeholder-hint"><b>Jason</b></h3>
-        <p class="placeholder-hint">Set up the keyboard layout and added sound for accurate notes based on scaling semitones, using a custom mesh for white keys, as well as configuring basic key physics</p>
-        <p></p>
-        <h3 class="placeholder-hint"><b>All Teammates</b></h3>
-        <p class="placeholder-hint">Maintained documentation of progress using GitHub, tested and debugged all portions of the project, and communicated updates in a timely manner for routine integration</p>
-      </div>
-
-      <div class="section">
-        <h2><span>07</span> Limitations</h2>
-        <p class="placeholder-hint">We anticipated the impact that not being able to provide haptic feedback would have on the overall user experience. Without tactile sensation when pressing keys, users lose an important cue for timing, pressure control, and spatial awareness. This not only makes it harder to play accurately, but also reduces the sense of realism compared to an actual piano. In addition, the absence of physical resistance means fingers can pass through or sink into virtual keys, which we were not able to fully eliminate due to the limitations of hand tracking and collision detection. As a result, despite good visual and audio feedback, the interaction could feel less grounded and more inconsistent than intended. In some cases, the keys still jitter slightly when played. The keys are also unable to stay pressed down, which is important when holding chords.</p>
-        <p class="placeholder-hint">While an octave is reachable using a single hand in terms of chords on a typical piano, because of the larger keys that we used, only a seventh is reachable with a single hand on the virtual piano. There is a tradeoff between the realism of the key size and the accuracy of the tracking, and we chose to have larger keys for more accurate presses.</p>
-        <p class="placeholder-hint">One limitation in addition to the physics is that the keys that are able to be tracked and thus played are limited to the field of view, making it difficult to play with the left and right hand simultaneously unless they are both fully in view. This is not always the case when playing more difficult pieces with repeated left hand chords often driven by muscle memory while focusing on more complex movements with the right hand.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>08</span> Results</h2>
-        <p class="placeholder-hint">We have created a prototype of a working piano in virtual reality. We are able to play simple songs and chords, allowing beginner users to practice without a physical piano. It also has sheet music in the virtual environment that the user is able to read.</p>
-        <p></p>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="Room.mp4" controls></video>
-          </div>
-          <p class="video-caption">We set up a room scene to immerse the user in a rudimentary virtual environment.</p>
-        </div>
-        <p></p>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="Grab.mp4" controls></video>
-          </div>
-          <p class="video-caption">The user can grab and move the piano to the desired location.</p>
-        </div>
-        <p></p>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="Capsules.mp4" controls></video>
-          </div>
-          <p class="video-caption">Here, the tracking capsules that follow the fingertip positions are visible, showing the typical amount of lag and jitter between the collider and visible mesh.</p>
-        </div>
-        <p></p>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="FurElise.mp4" controls></video>
-          </div>
-          <p class="video-caption">We can play real pieces such as Fur Elise recognizably fast and with good accuracy using all fingers.</p>
-        </div>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="ToccataInD.mp4" controls></video>
-          </div>
-          <p class="video-caption">Snippets of Toccata and Fugue in D minor.</p>
-        </div>
-        <p></p>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="RHChords.mp4" controls></video>
-          </div>
-          <div class="video-wrapper">
-            <video src="LHChords.mp4" controls></video>
-          </div>
-          <p class="video-caption">Basic chords such as thirds and fourths are achievable, as all fingers can be recognized distinctly.</p>
-        </div>
-        <div class="video-block">
-          <div class="video-wrapper">
-            <video src="Trill.mp4?v=2" controls></video>
-          </div>
-          <p class="video-caption">More advanced techniques such as trills can also be approximated.</p>
-        </div>
-
-      </div>
-
-      <div class="section">
-        <h2><span>09</span> Summary</h2>
-        <p class="placeholder-hint">Our project demonstrates the feasibility of a controller-less piano interface within a fully virtual environment. We also create a working piano prototype that is on par with or better than current fully VR piano applications. By combining low-pass filters with velocity-based collision detection, we are able to mitigate jittering keys and the playing of untargeted keys. Contributions of this work include refining the precision of the hand tracking using linear interpolation. It also includes the usage of a finger-to-key dictionary to ensure that fingers only play the key that they are targeting. Lastly, we implemented a fully functional audio system with accurate sounds and low latency.</p>
-      </div>
-
-      <div class="section">
-        <h2><span>10</span> Future Work</h2>
-        <p class="placeholder-hint">In the future, we would like to continue to improve the hand tracking accuracy of the piano. It is still difficult to play chords or play notes very quickly, and untargeted keys will still be pressed occasionally due to the Quest hand tracking not being fully accurate. However, based on the current state of the application, we believe it could be submitted for review in the Meta Quest Store. Lastly, we would want to incorporate a custom hand rig to not only allow for exact tracking of fingers, but also provide haptic feedback to make users feel like they are pressing on a real piano key, though that would require more advanced hardware.</p>
-      </div>
-
-    </div><!-- /tab-final -->
-
-  </div><!-- /tabs-wrapper -->
-
-  <script>
-    function switchTab(name, btn) {
-      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + name).classList.add('active');
-      btn.classList.add('active');
-    }
-  </script>
-
+  </main>
 </body>
 </html>
